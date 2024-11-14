@@ -5,8 +5,10 @@ import cors from 'cors';
 import vocabRoutes from './api/routes/vocabRoutes.js';
 import Vocab from './api/models/vocabModel.js';
 import connectDB from './api/mongodb/connect.js';
+import authRoutes from './api/routes/authRoutes.js';
+import dotenv from 'dotenv';
 
-
+dotenv.config();
 const port = process.env.PORT || 3000;
 const app = express();
 
@@ -19,6 +21,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/', vocabRoutes);
+app.use('/auth', authRoutes);
 
 const startServer = async () => {
     try {
