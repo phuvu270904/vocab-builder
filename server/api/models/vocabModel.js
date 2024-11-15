@@ -10,6 +10,10 @@ const VocabSchema = new mongoose.Schema(
             type: String,
             required: "German word is required"
         },
+        french: {
+            type: String,
+            required: "French word is required"
+        }
     },
     {
         collection: "vocab"
