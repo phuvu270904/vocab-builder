@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div class="ui inverted segment navbar">
+    <div v-if="showNav" class="ui inverted segment navbar">
       <div class="ui center aligned container">
         <div class="ui large secondary inverted pointing menu compact">
           <router-link to="/words" exact class="item">
@@ -11,6 +11,11 @@
           </router-link>
           <router-link to="/test" class="item">
             <i class="graduation cap icon"></i> Test
+          </router-link>
+        </div>
+        <div class="ui large secondary inverted pointing menu compact ui right floated">
+          <router-link to="/login" class="item">
+            <i class="sign in icon"></i> Login
           </router-link>
         </div>
       </div>
@@ -29,7 +34,24 @@
 
 <script>
 export default {
-  name: 'app'
+  name: 'app',
+  data() {
+    return {
+      showNav: true
+    };
+  },
+  created() {
+    this.updateShowNav();
+  },
+  watch: {
+    '$route.path': 'updateShowNav'
+  },
+  methods: {
+    updateShowNav() {
+      const hiddenPaths = ['/login', '/register'];
+      this.showNav = !hiddenPaths.includes(this.$route.path);
+    }
+  }
 };
 </script>
 

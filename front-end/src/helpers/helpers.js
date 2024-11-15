@@ -11,7 +11,7 @@ Vue.use(VueFlashMessage, {
 });
 
 const vm = new Vue();
-const baseURL = "http://localhost:3000/words/";
+const baseURL = "http://localhost:3000";
 
 const handleError = fn => (...params) =>
   fn(...params).catch(error => {
@@ -20,23 +20,31 @@ const handleError = fn => (...params) =>
 
 export const api = {
     getWord: handleError(async id => {
-        const res = await axios.get(baseURL + id);
+        const res = await axios.get(`${baseURL}/words` + id);
         return res.data;
     }),
     getWords: handleError(async () => {
-        const res = await axios.get(baseURL);
+        const res = await axios.get(`${baseURL}/words`);
         return res.data;
     }),
     deleteWord: handleError(async id => {
-        const res = await axios.delete(baseURL + id);
+        const res = await axios.delete(`${baseURL}/words` + id);
         return res.data;
     }),
     createWord: handleError(async payload => {
-        const res = await axios.post(baseURL, payload);
+        const res = await axios.post(`${baseURL}/words`, payload);
         return res.data;
     }),
     updateWord: handleError(async (payload) => {
-        const res = await axios.put(baseURL + payload._id, payload);
+        const res = await axios.put(`${baseURL}/words` + payload._id, payload);
         return res.data;
-    })
+    }),
+    login: handleError(async payload => {
+        try {
+            const res = await axios.post(`${baseURL}/auth/login`, payload);
+            return res.data;
+        } catch (error) {
+            return error.response;
+        }
+    }),
 }
