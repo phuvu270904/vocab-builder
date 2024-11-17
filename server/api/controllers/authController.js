@@ -1,7 +1,6 @@
 import Auth from '../models/authModel.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import randToken from 'rand-token';
 
 export const register = async (req, res) => {
     const email = req.body.email.toLowerCase();
@@ -44,6 +43,7 @@ export const login = async (req, res) => {
         }
 
         const accessTokenSecret = process.env.JWT_SECRET;
+        const refreshTokenSecret = process.env.REFRESH_SECRET;
 
         const dataForAccessToken = {
             id: user._id,
@@ -51,7 +51,8 @@ export const login = async (req, res) => {
             email
         };
 
-        const accessToken = jwt.sign(dataForAccessToken, accessTokenSecret, { expiresIn: '1h' });
+        const accessToken = jwt.sign(dataForAccessToken, accessTokenSecret, { expiresIn: '30s' });
+        const refreshToken = jwt.sign({}, refreshTokenSecret, { expiresIn: '1h' });
 
         if (!accessToken) {
             return res
@@ -59,13 +60,13 @@ export const login = async (req, res) => {
                 .send('Error creating access token');
         }
 
-        let refreshToken = randToken.generate(120);
-
-        if (!user.refreshToken) {
-            await Auth.updateOne({ email }, { refreshToken });
-        } else {
-            refreshToken = user.refreshToken;
+        if (!refreshToken) {
+            return res
+                .status(401)
+                .send('Error creating refresh token');
         }
+
+        await Auth.updateOne({ email }, { refreshToken });
 
         return res.json({
             message: 'Login success',
@@ -109,50 +110,59 @@ export const profile = async (req, res) => {
 }
 
 export const refresh = async (req, res) => {
-    const accessTokenFromHeader = req.headers['authorization']?.split(" ")[1];
-	if (!accessTokenFromHeader) {
-		return res.status(400).send('Cannot find access token.');
-	}
+    try {
+        const accessTokenFromHeader = req.headers['authorization']?.split(" ")[1];
+        if (!accessTokenFromHeader) {
+            return res.status(400).send('Cannot find access token.');
+        }
 
-	const refreshTokenFromBody = req.body.refreshToken;
-	if (!refreshTokenFromBody) {
-		return res.status(400).send('Cannot find refresh token.');
-	}
+        const refreshTokenFromBody = req.body.refreshToken;
+        if (!refreshTokenFromBody) {
+            return res.status(400).send('Cannot find refresh token.');
+        }
 
-	const accessTokenSecret =
-		process.env.JWT_SECRET || jwtVariable.accessTokenSecret;
+        const accessTokenSecret = process.env.JWT_SECRET;
+        const refreshTokenSecret = process.env.REFRESH_SECRET;
 
-	const decoded = await jwt.verify(accessTokenFromHeader, accessTokenSecret, { ignoreExpiration: true });
+        const decoded = await jwt.verify(accessTokenFromHeader, accessTokenSecret, { ignoreExpiration: true });
+        const decodedRefreshToken = await jwt.verify(refreshTokenFromBody, refreshTokenSecret);
 
-	if (!decoded) {
-		return res.status(400).send('Access token is invalid.');
-	}
+        if (!decoded) {
+            return res.status(400).send('Access token is invalid.');
+        }
 
-	const email = decoded.email;
+        if (!decodedRefreshToken) {
+            return res.status(400).send('Refresh token is invalid.');
+        }
 
-	const user = await Auth.findOne({ email });
-	if (!user) {
-		return res.status(401).send('User not found');
-	}
+        const email = decoded.email;
 
-	if (refreshTokenFromBody !== user.refreshToken) {
-		return res.status(400).send('Invalid refresh token');
-	}
+        const user = await Auth.findOne({ email });
+        if (!user) {
+            return res.status(401).send('User not found');
+        }
 
-	const dataForAccessToken = {
-		id: user._id,
-        username: user.username,
-        email
-	};
+        if (refreshTokenFromBody !== user.refreshToken) {
+            return res.status(400).send('Invalid refresh token');
+        }
 
-	const accessToken = jwt.sign(dataForAccessToken, accessTokenSecret, { expiresIn: "1h" });
+        const dataForAccessToken = {
+            id: user._id,
+            username: user.username,
+            email
+        };
 
-	if (!accessToken) {
-		return res
-			.status(400)
-			.send('Error creating access token');
-	}
-	return res.json({
-		token: accessToken,
-	});
+        const accessToken = jwt.sign(dataForAccessToken, accessTokenSecret, { expiresIn: "30s" });
+
+        if (!accessToken) {
+            return res
+                .status(400)
+                .send('Error creating access token');
+        }
+        return res.json({
+            token: accessToken,
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 }

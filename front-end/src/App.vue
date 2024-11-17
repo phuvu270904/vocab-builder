@@ -56,9 +56,10 @@ export default {
 </script>
 
 <style>
-#app > div.navbar {
+#app>div.navbar {
   margin-bottom: 1.5em;
 }
+
 .myFlash {
   width: 250px;
   margin: 10px;
@@ -66,15 +67,19 @@ export default {
   top: 50;
   right: 0;
 }
+
 input {
   width: 300px;
 }
+
 div.label {
   width: 120px;
 }
+
 div.input {
   margin-bottom: 10px;
 }
+
 button.ui.button {
   margin-top: 15px;
   display: block;

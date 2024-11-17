@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../interceptors/axios.js";
 import Vue from "vue";
 import VueFlashMessage from "vue-flash-message";
 import 'vue-flash-message/dist/vue-flash-message.min.css';
@@ -20,23 +20,43 @@ const handleError = fn => (...params) =>
 
 export const api = {
     getWord: handleError(async id => {
-        const res = await axios.get(`${baseURL}/words` + id);
+        const res = await axios.get(`${baseURL}/words/` + id, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            }
+        });
         return res.data;
     }),
     getWords: handleError(async () => {
-        const res = await axios.get(`${baseURL}/words`);
+        const res = await axios.get(`${baseURL}/words`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            }
+        });
         return res.data;
     }),
     deleteWord: handleError(async id => {
-        const res = await axios.delete(`${baseURL}/words` + id);
+        const res = await axios.delete(`${baseURL}/words/` + id, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            }
+        });
         return res.data;
     }),
     createWord: handleError(async payload => {
-        const res = await axios.post(`${baseURL}/words`, payload);
+        const res = await axios.post(`${baseURL}/words`, payload, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            }
+        });
         return res.data;
     }),
     updateWord: handleError(async (payload) => {
-        const res = await axios.put(`${baseURL}/words` + payload._id, payload);
+        const res = await axios.put(`${baseURL}/words/` + payload._id, payload, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            }
+        });
         return res.data;
     }),
     login: handleError(async payload => {
@@ -47,4 +67,48 @@ export const api = {
             return error.response;
         }
     }),
+    register: handleError(async payload => {
+        try {
+            const res = await axios.post(`${baseURL}/auth/register`, payload);
+            return res.data;
+        } catch (error) {
+            return error.response;
+        }
+    }),
+    profile: handleError(async () => {
+        try {
+            const res = await axios.get(`${baseURL}/auth/profile`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`
+                }
+            });
+            return res.data;
+        } catch (error) {
+            return error.response;
+        }
+    }),
+    logout: handleError(async refreshToken => {
+        try {
+            const res = await axios.post(`${baseURL}/auth/logout`, { refreshToken }, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`
+                }
+            });
+            return res.data;
+        } catch (error) {
+            return error.response;
+        }
+    }),
+    refresh: handleError(async (accessToken, refreshToken) => {
+        try {
+            const res = await axios.post(`${baseURL}/auth/refresh`, { refreshToken }, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            });
+            return res.data;
+        } catch (error) {
+            return error.response;
+        }
+    })
 }

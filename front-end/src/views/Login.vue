@@ -2,7 +2,7 @@
     <div class="ui middle aligned center aligned grid page-login">
         <div class="column">
             <h1 class="ui image header">
-                Login to your account
+                Log In to your account
             </h1>
             <form @submit.prevent="handleSubmit" class="ui large form" :class="{ error: hasError }">
                 <div class="ui stacked secondary segment">
@@ -69,11 +69,9 @@ export default {
             }
 
             const res = await api.login(this.form);
-            console.log(res);
             if (res.status) {
                 this.errors.push(res.data);
             }
-
 
             if (this.errors.length > 0) {
                 this.hasError = true;
@@ -81,6 +79,8 @@ export default {
                 this.hasError = false;
                 this.submitForm();
                 this.$router.push("/");
+                localStorage.setItem("token", res.token);
+                localStorage.setItem("refreshToken", res.refreshToken);
             }
         },
         validateEmail(email) {
