@@ -17,10 +17,10 @@
                 <td width="75" class="center aligned">
                     <router-link :to="{ name: 'show', params: { wordId: word._id }}">Show</router-link>
                 </td>
-                <td width="75" class="center aligned">
+                <td v-if="isLoggedIn" width="75" class="center aligned">
                     <router-link :to="{ name: 'edit', params: { wordId: word._id }}">Edit</router-link>
                 </td>
-                <td width="75" class="center aligned" @click.prevent="onDestroy(word._id)">
+                <td v-if="isLoggedIn" width="75" class="center aligned" @click.prevent="onDestroy(word._id)">
                     <a :href="`words/${word._id}`">Destroy</a>
                 </td>
             </tr>
@@ -41,6 +41,11 @@ export default {
     },
     async mounted() {
         this.words = await api.getWords();
+    },
+    computed: {
+        isLoggedIn() {
+            return this.$store.getters.isLoggedIn;
+        }
     },
     methods: {
         async onDestroy(id) {

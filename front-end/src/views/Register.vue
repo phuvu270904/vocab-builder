@@ -4,30 +4,30 @@
             <h1 class="ui image header">
                 Sign up
             </h1>
-            <form @submit.prevent="handleSubmit" class="ui large form" :class="{ error: hasError }">
+            <form @submit.prevent="handleSubmit" class="ui large form" :class="{ error: hasError }" autocomplete="off">
                 <div class="ui stacked secondary segment">
                     <div class="field">
                         <div class="ui left icon input">
                             <i class="envelope icon"></i>
-                            <input type="text" v-model="form.username" placeholder="Username" />
+                            <input type="text" v-model="form.username" placeholder="Username" autocomplete="off" />
                         </div>
                     </div>
                     <div class="field">
                         <div class="ui left icon input">
                             <i class="user icon"></i>
-                            <input type="text" v-model="form.email" placeholder="E-mail address" />
+                            <input type="text" v-model="form.email" placeholder="E-mail address" autocomplete="off" />
                         </div>
                     </div>
                     <div class="field">
                         <div class="ui left icon input">
                             <i class="lock icon"></i>
-                            <input type="password" v-model="form.password" placeholder="Password" />
+                            <input type="password" v-model="form.password" placeholder="Password" autocomplete="off" />
                         </div>
                     </div>
                     <div class="field">
                         <div class="ui left icon input">
                             <i class="phone icon"></i>
-                            <input type="text" v-model="form.phone" placeholder="Phone Number" />
+                            <input type="text" v-model="form.phone" placeholder="Phone Number" autocomplete="off" />
                         </div>
                     </div>
                     <div class="ui fluid large primary submit button" @click="validateForm">

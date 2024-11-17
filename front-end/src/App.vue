@@ -2,21 +2,37 @@
   <div id="app">
     <div v-if="showNav" class="ui inverted segment navbar">
       <div class="ui center aligned container">
-        <div class="ui large secondary inverted pointing menu compact">
+        <div class="ui massive secondary inverted pointing menu compact">
           <router-link to="/words" exact class="item">
             <i class="comment outline icon"></i> Words
           </router-link>
-          <router-link to="/words/new" class="item">
+          <router-link v-if="isLoggedIn" to="/words/new" class="item">
             <i class="plus circle icon"></i> New
           </router-link>
-          <router-link to="/test" class="item">
+          <router-link v-if="isLoggedIn" to="/test" class="item">
             <i class="graduation cap icon"></i> Test
           </router-link>
         </div>
         <div class="ui large secondary inverted pointing menu compact ui right floated">
-          <router-link to="/login" class="item">
+          <router-link v-if="!isLoggedIn" to="/login" class="ui simple dropdown item ui massive menu">
             <i class="sign in icon"></i> Login
           </router-link>
+          <div v-else class="ui simple dropdown item ui massive menu">
+            <i class="user icon"></i>
+            <div class="ui massive">
+              {{ user.username }}
+            </div>
+            <i class="dropdown icon"></i>
+            <div class="menu">
+              <router-link to="/profile" class="item">
+                <i class="user icon"></i> Profile
+              </router-link>
+              <div class="divider"></div>
+              <div class="item" @click="handleLogout()">
+                <i class="sign out icon"></i> Logout
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -33,6 +49,8 @@
 </template>
 
 <script>
+import { mapGetters, mapMutations } from 'vuex';
+
 export default {
   name: 'app',
   data() {
@@ -40,16 +58,40 @@ export default {
       showNav: true
     };
   },
-  created() {
+  async created() {
     this.updateShowNav();
+    if (localStorage.getItem('token')) {
+      this.setLoginStatus(true);
+    }
   },
   watch: {
-    '$route.path': 'updateShowNav'
+    '$route': async function () {
+      this.updateShowNav();
+    },
+    isLoggedIn() {
+      if (localStorage.getItem('token')) {
+        this.setLoginStatus(true);
+      }
+    }
+  },
+  computed: {
+    ...mapGetters(['isLoggedIn', 'user'])
   },
   methods: {
+    ...mapMutations(['setLoginStatus']),
+
     updateShowNav() {
       const hiddenPaths = ['/login', '/register'];
       this.showNav = !hiddenPaths.includes(this.$route.path);
+    },
+    handleLogout() {
+      this.setLoginStatus(false);
+      localStorage.removeItem('token');
+      localStorage.removeItem('refreshToken');
+      if (this.$route.path !== '/words') {
+        this.$router.push('/');
+      }
+      window.location.reload();
     }
   }
 };

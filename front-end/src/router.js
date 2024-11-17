@@ -7,10 +7,11 @@ import Edit from './views/Edit.vue';
 import Test from './views/Test.vue';
 import Login from './views/Login.vue';
 import Register from './views/Register.vue';
+import store from './store/store';
 
 Vue.use(Router);
 
-export default new Router({
+const router = new Router({
     mode: 'history',
     routes: [
         {
@@ -54,3 +55,15 @@ export default new Router({
         }
     ]
 });
+
+router.beforeEach((to, from, next) => {
+    const isLoggedIn = store.getters.isLoggedIn;
+
+    if (!isLoggedIn && (to.path.includes('/words/new') || to.path.includes('/words/') && to.path.includes('/edit') || to.path.includes('/test'))) {
+        next('/');
+    } else {
+        next();
+    }
+});
+
+export default router;

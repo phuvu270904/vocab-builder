@@ -37,6 +37,7 @@
 
 <script>
 import { api } from "../helpers/helpers";
+import { mapMutations } from "vuex";
 
 export default {
     // eslint-disable-next-line vue/multi-word-component-names
@@ -52,6 +53,8 @@ export default {
         };
     },
     methods: {
+        ...mapMutations(["setUser", "setLoginStatus"]),
+
         async validateForm() {
             this.errors = [];
             this.hasError = false;
@@ -69,6 +72,12 @@ export default {
             }
 
             const res = await api.login(this.form);
+            this.setUser({
+                email: res.email,
+                username: res.username,
+            });
+            this.setLoginStatus(true);
+            
             if (res.status) {
                 this.errors.push(res.data);
             }
