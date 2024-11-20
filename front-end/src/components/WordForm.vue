@@ -1,14 +1,7 @@
 <!-- eslint-disable vue/no-mutating-props -->
 <template>
-    <form action="#" @submit.prevent="onSubmit">
+    <form>
         <p v-if="errorsPresent" class="error">Please fill out both fields!</p>
-
-        <div class="ui labeled input fluid">
-            <div class="ui label">
-                <i class="germany flag"></i> German
-            </div>
-            <input type="text" placeholder="Enter word..." v-model="word.german" />
-        </div>
 
         <div class="ui labeled input fluid">
             <div class="ui label">
@@ -19,16 +12,26 @@
 
         <div class="ui labeled input fluid">
             <div class="ui label">
+                <i class="germany flag"></i> German
+            </div>
+            <input type="text" placeholder="Enter word..." v-model="word.german" />
+        </div>
+
+        <div class="ui labeled input fluid">
+            <div class="ui label">
                 <i class="france flag"></i> French
             </div>
             <input type="text" placeholder="Enter word..." v-model="word.french" />
         </div>
 
-        <button class="positive ui button">Submit</button>
+        <button class="primary ui button" :disabled="disabledTranslate" @click.prevent="handleTranslate">Auto Translate</button>
+        <button class="positive ui button" :disabled="disabled" @click.prevent="onSubmit">Submit</button>
     </form>
 </template>
 
 <script>
+import { api } from '../helpers/helpers.js';
+
 export default {
     name: 'word-form',
     props: {
@@ -49,6 +52,14 @@ export default {
             errorsPresent: false
         };
     },
+    computed: {
+        disabled() {
+            return this.word.english === '' || this.word.german === '' || this.word.french === '';
+        },
+        disabledTranslate() {
+            return this.word.english === '';
+        }
+    },
     methods: {
         onSubmit: function () {
             if (this.word.english === '' || this.word.german === '' || this.word.french === '') {
@@ -56,7 +67,14 @@ export default {
             } else {
                 this.$emit('createOrUpdate', this.word);
             }
+        },
+        handleTranslate: async function () {
+            const response = await api.translateWord({word: this.word.english});
 
+            // eslint-disable-next-line vue/no-mutating-props
+            this.word.german = response.german;
+            // eslint-disable-next-line vue/no-mutating-props
+            this.word.french = response.french;
         }
     }
 };

@@ -1,20 +1,24 @@
 <template>
     <div>
+      <h2>Progress: {{ currentProgress }}/{{ this.words.length }}</h2>
       <h2>Score: {{ score }} out of {{ this.words.length }}</h2>
   
       <form action="#" @submit.prevent="onSubmit">
-        <div class="ui labeled input fluid">
-          <div class="ui label">
-            <i class="germany flag"></i> German
-          </div>
-          <input type="text" readonly :disabled="testOver" :value="currWord.german"/>
-        </div>
+
         <div class="ui labeled input fluid">
           <div class="ui label">
             <i class="united kingdom flag"></i> English
           </div>
-          <input type="text" placeholder="Enter word..." v-model="english" :disabled="testOver" autocomplete="off" />
+          <input type="text" readonly :disabled="testOver" autocomplete="off" :value="currWord.english" />
         </div>
+
+        <div class="ui labeled input fluid">
+          <div class="ui label">
+            <i class="germany flag"></i> German
+          </div>
+          <input type="text" placeholder="Enter word..." v-model="german" :disabled="testOver" autocomplete="off"/>
+        </div>
+        
         <div class="ui labeled input fluid">
           <div class="ui label">
             <i class="france flag"></i> French
@@ -46,9 +50,10 @@
         incorrectGuesses: [],
         result: '',
         resultClass: '',
-        english: '',
+        german: '',
         french: '',
         score: 0,
+        currentProgress: 0,
         testOver: false
       };
     },
@@ -59,15 +64,16 @@
     },
     methods: {
       onSubmit: function() {
-        if (this.english === this.currWord.english && this.french === this.currWord.french) {
+        if (this.german.toLowerCase() === this.currWord.german.toLowerCase() && this.french.toLowerCase() === this.currWord.french.toLowerCase()) {
           this.flash('Correct!', 'success', { timeout: 1000 });
           this.score += 1;
         } else {
           this.flash('Wrong!', 'error', { timeout: 1000 });
-          this.incorrectGuesses.push(this.currWord.german);
+          this.incorrectGuesses.push(this.currWord.english);
         }
   
-        this.english = '';
+        this.currentProgress += 1;
+        this.german = '';
         this.french = '';
         this.randWords.shift();
   

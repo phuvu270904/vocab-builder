@@ -1,4 +1,5 @@
 import Vocab from "../models/vocabModel.js";
+import axios from "axios";
 
 export const list_all_words = async (req, res) => {
     try {
@@ -43,5 +44,20 @@ export const delete_a_word = async (req, res) => {
         res.json({ message: "Word successfully deleted" });
     } catch (err) {
         res.status(500).send(err);
+    }
+}
+
+export const translate_word = async (req, res) => {
+    try {
+        const word = req.body.word;
+        const translateToFrench = await axios.get(`https://api.mymemory.translated.net/get?q=${word}&langpair=en|fr`);
+        const translateToGerman = await axios.get(`https://api.mymemory.translated.net/get?q=${word}&langpair=en|de`);
+        const result = {
+            french: translateToFrench.data.matches[0].translation,
+            german: translateToGerman.data.matches[0].translation
+        }
+        res.status(200).json(result);
+    } catch (err) {
+        res.status(500).send(err.message);
     }
 }

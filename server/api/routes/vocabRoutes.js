@@ -9,5 +9,6 @@ router.post('/words', verifyToken, vocabBuilder.create_a_word);
 router.get('/words/:wordId', vocabBuilder.read_a_word);
 router.put('/words/:wordId', verifyToken, vocabBuilder.update_a_word);
 router.delete('/words/:wordId', verifyToken, vocabBuilder.delete_a_word);
+router.post('/translate', verifyToken, vocabBuilder.translate_word);
 
 export default router;
