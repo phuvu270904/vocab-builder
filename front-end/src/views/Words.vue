@@ -17,10 +17,10 @@
                 <td width="75" class="center aligned">
                     <router-link :to="{ name: 'show', params: { wordId: word._id }}">Show</router-link>
                 </td>
-                <td v-if="isLoggedIn" width="75" class="center aligned">
+                <td v-if="isLoggedIn && $store.state.isAdmin" width="75" class="center aligned">
                     <router-link :to="{ name: 'edit', params: { wordId: word._id }}">Edit</router-link>
                 </td>
-                <td v-if="isLoggedIn" width="75" class="center aligned" @click.prevent="onDestroy(word._id)">
+                <td v-if="isLoggedIn && $store.state.isAdmin" width="75" class="center aligned" @click.prevent="onDestroy(word._id)">
                     <a :href="`words/${word._id}`">Destroy</a>
                 </td>
             </tr>
@@ -44,6 +44,11 @@ export default {
         this.words = await api.getWords();
         if (this.isLoggedIn) {
             const userInfo = await api.profile();
+            if (userInfo.user.role === 'admin') {
+                this.$store.commit('setAdmin', true);
+            } else {
+                this.$store.commit('setAdmin', false);
+            }
             this.setUser({
                 email: userInfo.user.email,
                 username: userInfo.user.username,

@@ -70,12 +70,26 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
     const isLoggedIn = store.getters.isLoggedIn;
+    const isAdmin = store.state.isAdmin;
 
-    if (!isLoggedIn && (to.path.includes('/words/new') || to.path.includes('/words/') && to.path.includes('/edit') || to.path.includes('/test'))) {
-        next('/');
-    } else {
-        next();
+    const restrictedRoutes = [
+        '/words/new',
+        '/profile',
+        '/changePassword',
+        '/test'
+    ];
+
+    const isEditRoute = to.path.includes('/words/') && to.path.includes('/edit');
+
+    if (!isLoggedIn && (restrictedRoutes.includes(to.path) || isEditRoute)) {
+        return next('/');
     }
+
+    if (isLoggedIn && !isAdmin && (to.path === '/words/new' || isEditRoute)) {
+        return next('/');
+    }
+
+    next();
 });
 
 export default router;

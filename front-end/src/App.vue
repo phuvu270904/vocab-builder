@@ -6,7 +6,7 @@
           <router-link to="/words" exact class="item">
             <i class="comment outline icon"></i> Words
           </router-link>
-          <router-link v-if="isLoggedIn" to="/words/new" class="item">
+          <router-link v-if="isLoggedIn && $store.state.isAdmin" to="/words/new" class="item">
             <i class="plus circle icon"></i> New
           </router-link>
           <router-link v-if="isLoggedIn" to="/test" class="item">
@@ -64,6 +64,11 @@ export default {
     if (localStorage.getItem('token')) {
       this.setLoginStatus(true);
       const userInfo = await api.profile();
+      if (userInfo.user.role === 'admin') {
+          this.$store.commit('setAdmin', true);
+      } else {
+          this.$store.commit('setAdmin', false);
+      }
       this.setUser({
         email: userInfo.user.email,
         username: userInfo.user.username,

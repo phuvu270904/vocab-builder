@@ -6,6 +6,7 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   state: {
     isLoggedIn: !!localStorage.getItem("token"),
+    isAdmin: false,
     user: {},
   },
   mutations: {
@@ -14,6 +15,9 @@ const store = new Vuex.Store({
     },
     setUser(state, user) {
       state.user = user;
+    },
+    setAdmin(state, isAdmin) {
+      state.isAdmin = isAdmin;
     },
   },
   getters: {
