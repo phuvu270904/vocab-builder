@@ -12,7 +12,8 @@ export const register = async (req, res) => {
             email,
             password: hashPassword,
             username: req.body.username,
-            phone: req.body.phone
+            phone: req.body.phone,
+            role: "user"
         };
         const createUser = new Auth(newUser);
         await createUser.save();
@@ -135,9 +136,7 @@ export const refresh = async (req, res) => {
             return res.status(400).send('Refresh token is invalid.');
         }
 
-        const email = decoded.email;
-
-        const user = await Auth.findOne({ email });
+        const user = await Auth.findById(decoded.id).lean();
         if (!user) {
             return res.status(401).send('User not found');
         }
@@ -149,7 +148,7 @@ export const refresh = async (req, res) => {
         const dataForAccessToken = {
             id: user._id,
             username: user.username,
-            email
+            email: user.email
         };
 
         const accessToken = jwt.sign(dataForAccessToken, accessTokenSecret, { expiresIn: "30s" });

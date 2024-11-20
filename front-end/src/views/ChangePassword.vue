@@ -74,7 +74,7 @@ export default {
                 newPassword: this.form.newPassword
             });
             if (response.status === 200) {
-                this.flash('Password reset successfully', 'success');
+                this.flash('Password changed successfully', 'success');
             } else {
                 this.flash('Error', 'error');
             }

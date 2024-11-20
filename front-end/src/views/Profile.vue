@@ -91,16 +91,33 @@ export default {
     }
   },
   methods: {
+    validatePhone(phone) {
+      const re = /^\d{10}$/;
+      return re.test(phone);
+    },
+    validateEmail(email) {
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return re.test(email);
+    },
     async handleUpdateProfile() {
+      if (!this.validateEmail(this.form.email)) {
+        this.flash('Please enter a valid email', 'error');
+        return;
+      }
+      if (!this.validatePhone(this.form.phone)) {
+        this.flash('Please enter a valid phone number', 'error');
+        return;
+      }
       const res = await api.updateProfile(this.form);
-      if (res.username) {
+      if (res.status === 500) {
+        this.flash('Duplicate Email!', 'error');
+        return;
+      }
+      if (res.data.username) {
         window.location.reload();
         this.flash('Profile updated successfully', 'success');
       } else {
-        this.$store.dispatch('flashMessage', {
-          message: 'Profile update failed',
-          type: 'error'
-        });
+        this.flash('Profile updated failed', 'error');
       }
     }
   }

@@ -118,7 +118,7 @@ export const api = {
                     Authorization: `Bearer ${localStorage.getItem("token")}`
                 }
             });
-            return res.data;
+            return res;
         } catch (error) {
             return error.response;
         }
