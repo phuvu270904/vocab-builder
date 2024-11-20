@@ -29,6 +29,7 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
 import { api } from '../helpers/helpers.js';
 
 export default {
@@ -41,6 +42,12 @@ export default {
     },
     async mounted() {
         this.words = await api.getWords();
+        const userInfo = await api.profile();
+        this.setUser({
+            email: userInfo.user.email,
+            username: userInfo.user.username,
+            phone: userInfo.user.phone
+        });
     },
     computed: {
         isLoggedIn() {
@@ -48,6 +55,7 @@ export default {
         }
     },
     methods: {
+        ...mapMutations(['setUser']),
         async onDestroy(id) {
             const sure = window.confirm('Are you sure?');
             if (!sure) return;

@@ -37,10 +37,10 @@
       </div>
     </div>
 
-    <div class="ui text container">
+    <div :class="profileRoute ? '' : 'ui text container'">
       <flash-message class="myFlash"></flash-message>
-      <div class="ui one column grid">
-        <div class="column">
+      <div>
+        <div>
           <router-view />
         </div>
       </div>
@@ -50,6 +50,7 @@
 
 <script>
 import { mapGetters, mapMutations } from 'vuex';
+import {api} from './helpers/helpers';
 
 export default {
   name: 'app',
@@ -58,10 +59,16 @@ export default {
       showNav: true
     };
   },
-  async created() {
+  async mounted() {
     this.updateShowNav();
     if (localStorage.getItem('token')) {
       this.setLoginStatus(true);
+      const userInfo = await api.profile();
+      this.setUser({
+        email: userInfo.user.email,
+        username: userInfo.user.username,
+        phone: userInfo.user.phone
+      });
     }
   },
   watch: {
@@ -75,10 +82,13 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['isLoggedIn', 'user'])
+    ...mapGetters(['isLoggedIn', 'user']),
+    profileRoute() {
+      return this.$route.path == '/profile' ? true : false
+    }
   },
   methods: {
-    ...mapMutations(['setLoginStatus']),
+    ...mapMutations(['setLoginStatus', 'setUser']),
 
     updateShowNav() {
       const hiddenPaths = ['/login', '/register'];
@@ -125,5 +135,9 @@ div.input {
 button.ui.button {
   margin-top: 15px;
   display: block;
+}
+
+.ui.simple.dropdown .menu {
+  margin-top: 0 !important;
 }
 </style>

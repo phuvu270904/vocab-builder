@@ -110,5 +110,17 @@ export const api = {
         } catch (error) {
             return error.response;
         }
+    }),
+    updateProfile: handleError(async (payload) => {
+        try {
+            const res = await axios.put(`${baseURL}/auth/updateProfile`, payload, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`
+                }
+            });
+            return res.data;
+        } catch (error) {
+            return error.response;
+        }
     })
 }
