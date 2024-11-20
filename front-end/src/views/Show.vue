@@ -4,21 +4,26 @@
 
         <div class="ui labeled input fluid">
             <div class="ui label">
-                <i class="germany flag"></i> German
-            </div>
-            <input type="text" readonly :value="word.german" />
-        </div>
-        <div class="ui labeled input fluid">
-            <div class="ui label">
                 <i class="united kingdom flag"></i> English
             </div>
             <input type="text" readonly :value="word.english" />
+            <i class="volume up icon speech-synthe" @click="speak('en', word.english)"></i>
         </div>
+
+        <div class="ui labeled input fluid">
+            <div class="ui label">
+                <i class="germany flag"></i> German
+            </div>
+            <input type="text" readonly :value="word.german" />
+            <i class="volume up icon speech-synthe" @click="speak('de', word.german)"></i>
+        </div>
+        
         <div class="ui labeled input fluid">
             <div class="ui label">
                 <i class="france flag"></i> French
             </div>
             <input type="text" readonly :value="word.french" />
+            <i class="volume up icon speech-synthe" @click="speak('fr', word.french)"></i>
         </div>
         <div v-if="isLoggedIn" class="actions">
             <router-link :to="{ name: 'edit', params: { wordId: this.$route.params.wordId } }">
@@ -46,6 +51,14 @@ export default {
         isLoggedIn() {
             return this.$store.getters.isLoggedIn;
         }
+    },
+    methods: {
+        speak: function(lang, text) {
+            const msg = new SpeechSynthesisUtterance();
+            msg.text = text;
+            msg.lang = lang;
+            window.speechSynthesis.speak(msg);
+        }
     }
 }
 </script>
@@ -55,5 +68,11 @@ export default {
     display: block;
     text-decoration: underline;
     margin: 20px 10px;
+}
+.speech-synthe {
+    color: #2185d0;
+    margin-left: 20px; 
+    margin-top: 10px; 
+    cursor: pointer;
 }
 </style>
