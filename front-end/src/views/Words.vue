@@ -42,12 +42,14 @@ export default {
     },
     async mounted() {
         this.words = await api.getWords();
-        const userInfo = await api.profile();
-        this.setUser({
-            email: userInfo.user.email,
-            username: userInfo.user.username,
-            phone: userInfo.user.phone
-        });
+        if (this.isLoggedIn) {
+            const userInfo = await api.profile();
+            this.setUser({
+                email: userInfo.user.email,
+                username: userInfo.user.username,
+                phone: userInfo.user.phone
+            });
+        }
     },
     computed: {
         isLoggedIn() {

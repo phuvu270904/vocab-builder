@@ -184,3 +184,32 @@ export const updateProfile = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 }
+
+export const resetPassword = async (req, res) => {
+    try {
+        const token = req.headers['authorization']?.split(" ")[1];
+        if (!token) {
+            return res.status(401).json({ message: 'Authorization token is required' });
+        }
+    
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await Auth.findById(decoded.id);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const isPasswordValid = bcrypt.compareSync(req.body.oldPassword, user.password);
+        if (!isPasswordValid) {
+            return res.status(401).send('Old password is incorrect');
+        }
+
+        const hashPassword = bcrypt.hashSync(req.body.newPassword, 10);
+        const updatedUser = await Auth.findByIdAndUpdate(decoded.id, { password: hashPassword }, { new: true });
+        if (!updatedUser) {
+            return res.status(400).send('Error updating password');
+        }
+        res.status(200).json({updatedUser});
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}

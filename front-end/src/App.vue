@@ -84,7 +84,7 @@ export default {
   computed: {
     ...mapGetters(['isLoggedIn', 'user']),
     profileRoute() {
-      return this.$route.path == '/profile' ? true : false
+      return this.$route.path == '/profile' || this.$route.path == '/changePassword' ? true : false
     }
   },
   methods: {
@@ -94,7 +94,8 @@ export default {
       const hiddenPaths = ['/login', '/register'];
       this.showNav = !hiddenPaths.includes(this.$route.path);
     },
-    handleLogout() {
+    async handleLogout() {
+      await api.logout(localStorage.getItem('refreshToken'));
       this.setLoginStatus(false);
       localStorage.removeItem('token');
       localStorage.removeItem('refreshToken');

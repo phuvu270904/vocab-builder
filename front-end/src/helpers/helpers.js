@@ -62,7 +62,7 @@ export const api = {
     login: handleError(async payload => {
         try {
             const res = await axios.post(`${baseURL}/auth/login`, payload);
-            return res.data;
+            return res;
         } catch (error) {
             return error.response;
         }
@@ -119,6 +119,18 @@ export const api = {
                 }
             });
             return res.data;
+        } catch (error) {
+            return error.response;
+        }
+    }),
+    resetPassword: handleError(async (payload) => {
+        try {
+            const res = await axios.put(`${baseURL}/auth/resetPassword`, payload, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`
+                }
+            });
+            return res;
         } catch (error) {
             return error.response;
         }

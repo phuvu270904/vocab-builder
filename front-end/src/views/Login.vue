@@ -15,7 +15,7 @@
                     <div class="field">
                         <div class="ui left icon input">
                             <i class="lock icon"></i>
-                            <input type="password" v-model="form.password" placeholder="Password" />
+                            <input type="password" v-model="form.password" placeholder="Password" autocomplete="new-password" />
                         </div>
                     </div>
                     <div class="ui fluid large primary submit button" @click="validateForm">
@@ -56,40 +56,43 @@ export default {
         ...mapMutations(["setUser", "setLoginStatus"]),
 
         async validateForm() {
-            this.errors = [];
-            this.hasError = false;
-
-            if (!this.form.email) {
-                this.errors.push("Please enter your e-mail.");
-            } else if (!this.validateEmail(this.form.email)) {
-                this.errors.push("Please enter a valid e-mail.");
-            }
-
-            if (!this.form.password) {
-                this.errors.push("Please enter your password.");
-            } else if (this.form.password.length < 6) {
-                this.errors.push("Your password must be at least 6 characters.");
-            }
-
-            const res = await api.login(this.form);
-            this.setUser({
-                email: res.email,
-                username: res.username,
-            });
-            this.setLoginStatus(true);
-            
-            if (res.status) {
-                this.errors.push(res.data);
-            }
-
-            if (this.errors.length > 0) {
-                this.hasError = true;
-            } else {
+            try {
+                this.errors = [];
                 this.hasError = false;
-                this.submitForm();
-                this.$router.push("/");
-                localStorage.setItem("token", res.token);
-                localStorage.setItem("refreshToken", res.refreshToken);
+
+                if (!this.form.email) {
+                    this.errors.push("Please enter your e-mail.");
+                } else if (!this.validateEmail(this.form.email)) {
+                    this.errors.push("Please enter a valid e-mail.");
+                }
+
+                if (!this.form.password) {
+                    this.errors.push("Please enter your password.");
+                } else if (this.form.password.length < 6) {
+                    this.errors.push("Your password must be at least 6 characters.");
+                }
+                
+                if (this.errors.length > 0) {
+                    this.hasError = true;
+                } else {
+                    this.hasError = false;
+                    const res = await api.login(this.form);
+                    if (res.status === 200) {
+                        this.setUser({
+                            email: res.data.email,
+                            username: res.data.username,
+                        });
+                        this.submitForm();
+                        this.setLoginStatus(true);
+                        this.$router.push("/");
+                        localStorage.setItem("token", res.data.token);
+                        localStorage.setItem("refreshToken", res.data.refreshToken);   
+                    } else {
+                        this.flash(res.data, "error");
+                    }
+                }
+            } catch (error) {
+                this.flash("Login failed!", "error");
             }
         },
         validateEmail(email) {

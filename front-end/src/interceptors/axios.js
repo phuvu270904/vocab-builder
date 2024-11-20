@@ -7,6 +7,11 @@ axios.interceptors.response.use(
     async (error) => {
         const originalRequest = error.config;
 
+        const excludedEndpoints = ["/auth/login", "/auth/register"];
+        if (excludedEndpoints.some((endpoint) => originalRequest.url.includes(endpoint))) {
+            return Promise.reject(error);
+        }
+
         if (error.response && error.response.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
 
@@ -31,7 +36,7 @@ axios.interceptors.response.use(
                 console.error("Token refresh failed:", refreshError);
                 localStorage.removeItem("token");
                 localStorage.removeItem("refreshToken");
-                window.location.href = "/login";
+                // window.location.href = "/login";
             }
         }
 

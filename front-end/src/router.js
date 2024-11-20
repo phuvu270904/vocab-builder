@@ -8,6 +8,7 @@ import Test from './views/Test.vue';
 import Login from './views/Login.vue';
 import Register from './views/Register.vue';
 import Profile from './views/Profile.vue';
+import ChangePassword from './views/ChangePassword.vue';
 import store from './store/store';
 
 Vue.use(Router);
@@ -58,6 +59,11 @@ const router = new Router({
             path: '/profile',
             name: 'profile',
             component: Profile
+        },
+        {
+            path: '/changePassword',
+            name: 'changePassword',
+            component: ChangePassword
         }
     ]
 });

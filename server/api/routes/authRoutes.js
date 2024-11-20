@@ -10,6 +10,7 @@ router.post('/logout', verifyToken, authController.logout);
 router.get('/profile', verifyToken, authController.profile);
 router.post('/refresh', authController.refresh);
 router.put('/updateProfile', verifyToken, authController.updateProfile);
+router.put('/resetPassword', verifyToken, authController.resetPassword);
 
 export default router;
 

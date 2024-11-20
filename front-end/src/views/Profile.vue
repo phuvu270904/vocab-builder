@@ -35,18 +35,20 @@
           <tr>
             <td></td>
             <td>
-              <button class="ui inverted grey button" style="font-size: 20px;" @click="handleUpdateProfile()">Update Profile</button>
+            <button class="ui inverted grey button" style="font-size: 20px;" :disabled="disableUpdate" @click="handleUpdateProfile()">Update Profile</button>
             </td>
           </tr>
         </table>
 
-        <div style="flex: 1; display: flex; align-items: center; justify-content: center;">
-          <div class="ui animated button black" tabindex="0" style="font-size: 30px;">
-            <div class="visible content">Reset password</div>
-            <div class="hidden content">
-              <i class="right arrow icon"></i>
+        <div style="flex: 1; display: flex; align-items: center; justify-content: center; margin-bottom: 100px;">
+          <router-link to="/changePassword">
+            <div class="ui animated button black" tabindex="0" style="font-size: 30px;">
+              <div class="visible content">Change password?</div>
+              <div class="hidden content">
+                <i class="right arrow icon"></i>
+              </div>
             </div>
-          </div>
+          </router-link>
         </div>
       </div>
       
@@ -71,7 +73,10 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['user'])
+    ...mapGetters(['user']),
+    disableUpdate() {
+      return !this.form.username || !this.form.email || !this.form.phone;
+    }
   },
   watch: {
     user: {
@@ -87,8 +92,16 @@ export default {
   },
   methods: {
     async handleUpdateProfile() {
-      await api.updateProfile(this.form);
-      window.location.reload();
+      const res = await api.updateProfile(this.form);
+      if (res.username) {
+        window.location.reload();
+        this.flash('Profile updated successfully', 'success');
+      } else {
+        this.$store.dispatch('flashMessage', {
+          message: 'Profile update failed',
+          type: 'error'
+        });
+      }
     }
   }
 };

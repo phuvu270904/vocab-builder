@@ -21,7 +21,7 @@
                     <div class="field">
                         <div class="ui left icon input">
                             <i class="lock icon"></i>
-                            <input type="password" v-model="form.password" placeholder="Password" autocomplete="off" />
+                            <input type="password" v-model="form.password" placeholder="Password" autocomplete="new-password" />
                         </div>
                     </div>
                     <div class="field">
@@ -35,7 +35,7 @@
                     </div>
                 </div>
                 <div class="ui error message" v-if="hasError">
-                    <ul>
+                    <ul style="list-style: none;">
                         <li v-for="(error, index) in errors" :key="index">{{ error }}</li>
                     </ul>
                 </div>
@@ -48,6 +48,8 @@
 </template>
 
 <script>
+import { api } from '@/helpers/helpers';
+
 export default {
     // eslint-disable-next-line vue/multi-word-component-names
     name: "Register",
@@ -62,38 +64,43 @@ export default {
         };
     },
     methods: {
-        validateForm() {
-            this.errors = [];
-            this.hasError = false;
-
-            if (!this.form.username) {
-                this.errors.push("Please enter your username.");
-            }
-
-            if (!this.form.email) {
-                this.errors.push("Please enter your e-mail.");
-            } else if (!this.validateEmail(this.form.email)) {
-                this.errors.push("Please enter a valid e-mail.");
-            }
-
-            if (!this.form.password) {
-                this.errors.push("Please enter your password.");
-            } else if (this.form.password.length < 6) {
-                this.errors.push("Your password must be at least 6 characters.");
-            }
-
-            if (!this.form.phone) {
-                this.errors.push("Please enter your phone number.");
-            } else if (!this.validatePhone(this.form.phone)) {
-                this.errors.push("Please enter a valid phone number.");
-            }
-
-            if (this.errors.length > 0) {
-                this.hasError = true;
-            } else {
+        async validateForm() {
+            try {
+                this.errors = [];
                 this.hasError = false;
-                this.submitForm();
-                this.$router.push("/login");
+
+                if (!this.form.username) {
+                    this.errors.push("Please enter your username.");
+                }
+
+                if (!this.form.email) {
+                    this.errors.push("Please enter your e-mail.");
+                } else if (!this.validateEmail(this.form.email)) {
+                    this.errors.push("Please enter a valid e-mail.");
+                }
+
+                if (!this.form.password) {
+                    this.errors.push("Please enter your password.");
+                } else if (this.form.password.length < 6) {
+                    this.errors.push("Your password must be at least 6 characters.");
+                }
+
+                if (!this.form.phone) {
+                    this.errors.push("Please enter your phone number.");
+                } else if (!this.validatePhone(this.form.phone)) {
+                    this.errors.push("Please enter a valid phone number.");
+                }
+
+                if (this.errors.length > 0) {
+                    this.hasError = true;
+                } else {
+                    this.hasError = false;
+                    await api.register(this.form);
+                    this.submitForm();
+                    this.$router.push("/login");
+                }
+            } catch (error) {
+                console.error(error);
             }
         },
         validateEmail(email) {
