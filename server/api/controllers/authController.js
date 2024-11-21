@@ -184,7 +184,7 @@ export const updateProfile = async (req, res) => {
     }
 }
 
-export const resetPassword = async (req, res) => {
+export const changePassword = async (req, res) => {
     try {
         const token = req.headers['authorization']?.split(" ")[1];
         if (!token) {
@@ -199,7 +199,7 @@ export const resetPassword = async (req, res) => {
 
         const isPasswordValid = bcrypt.compareSync(req.body.oldPassword, user.password);
         if (!isPasswordValid) {
-            return res.status(401).send('Old password is incorrect');
+            return res.status(400).send('Old password is incorrect');
         }
 
         const hashPassword = bcrypt.hashSync(req.body.newPassword, 10);

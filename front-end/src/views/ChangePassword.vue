@@ -69,14 +69,14 @@ export default {
             if (this.form.newPassword !== this.form.confirmNewPassword) {
                 this.flash('Password does not match', 'error');
             }
-            const response = await api.resetPassword({
+            const response = await api.changePassword({
                 oldPassword: this.form.oldPassword,
                 newPassword: this.form.newPassword
             });
             if (response.status === 200) {
                 this.flash('Password changed successfully', 'success');
             } else {
-                this.flash('Error', 'error');
+                this.flash(response.data, 'error');
             }
         }
     }

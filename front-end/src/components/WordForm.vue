@@ -24,7 +24,7 @@
             <input type="text" placeholder="Enter word..." v-model="word.french" />
         </div>
 
-        <button class="primary ui button" :disabled="disabledTranslate" @click.prevent="handleTranslate">Auto Translate</button>
+        <button class="primary ui button" :disabled="disabledTranslate" @click.prevent="handleTranslate">{{ loading ? "Translating..." : "Auto Translate"}}</button>
         <button class="positive ui button" :disabled="disabled" @click.prevent="onSubmit">Submit</button>
     </form>
 </template>
@@ -49,7 +49,8 @@ export default {
     },
     data() {
         return {
-            errorsPresent: false
+            errorsPresent: false,
+            loading: false
         };
     },
     computed: {
@@ -69,12 +70,20 @@ export default {
             }
         },
         handleTranslate: async function () {
-            const response = await api.translateWord({word: this.word.english});
+            try {
+                this.loading = true;
+                const response = await api.translateWord({word: this.word.english});
+                // eslint-disable-next-line vue/no-mutating-props
+                this.word.german = response.german;
+                // eslint-disable-next-line vue/no-mutating-props
+                this.word.french = response.french;
+            } catch (error) {
+                console.error(error);
+            } finally {
+                this.loading = false;
+            }
 
-            // eslint-disable-next-line vue/no-mutating-props
-            this.word.german = response.german;
-            // eslint-disable-next-line vue/no-mutating-props
-            this.word.french = response.french;
+            
         }
     }
 };

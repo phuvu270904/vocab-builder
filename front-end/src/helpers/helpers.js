@@ -123,9 +123,9 @@ export const api = {
             return error.response;
         }
     }),
-    resetPassword: handleError(async (payload) => {
+    changePassword: handleError(async (payload) => {
         try {
-            const res = await axios.put(`${baseURL}/auth/resetPassword`, payload, {
+            const res = await axios.put(`${baseURL}/auth/changePassword`, payload, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`
                 }
