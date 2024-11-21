@@ -25,7 +25,7 @@
             <input type="text" readonly :value="word.french" />
             <i class="volume up icon speech-synthe" @click="speak('fr', word.french)"></i>
         </div>
-        <div v-if="isLoggedIn" class="actions">
+        <div v-if="isLoggedIn && $store.state.isAdmin" class="actions">
             <router-link :to="{ name: 'edit', params: { wordId: this.$route.params.wordId } }">
                 Edit word
             </router-link>
