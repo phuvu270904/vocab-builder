@@ -56,8 +56,15 @@ export default {
   computed: {
     ...mapGetters(['user']),
     disableUpdate() {
-      return !this.form.username || !this.form.email || !this.form.phone;
-    }
+      const hasEmptyField = !this.form.username || !this.form.email || !this.form.phone;
+
+      const isUnchanged =
+        this.form.username === this.user.username &&
+        this.form.email === this.user.email &&
+        this.form.phone === this.user.phone;
+
+      return hasEmptyField || isUnchanged;
+    },
   },
   watch: {
     user: {
