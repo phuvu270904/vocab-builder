@@ -37,7 +37,7 @@
       </div>
     </div>
 
-    <div :class="profileRoute ? '' : 'ui text container'">
+    <div class='ui text container'>
       <flash-message class="myFlash"></flash-message>
       <div>
         <div>
@@ -87,10 +87,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['isLoggedIn', 'user']),
-    profileRoute() {
-      return this.$route.path == '/profile' || this.$route.path == '/changePassword' ? true : false
-    }
+    ...mapGetters(['isLoggedIn', 'user'])
   },
   methods: {
     ...mapMutations(['setLoginStatus', 'setUser']),
@@ -167,10 +164,14 @@ button.ui.button {
 /* Menu Styles */
 .menu {
   display: flex;
-  justify-content: center; /* Center the menu horizontally */
-  align-items: center; /* Center items vertically */
-  gap: 20px; /* Space between menu items */
-  flex-grow: 1; /* Ensures it stretches to fill available space */
+  justify-content: center;
+  /* Center the menu horizontally */
+  align-items: center;
+  /* Center items vertically */
+  gap: 20px;
+  /* Space between menu items */
+  flex-grow: 1;
+  /* Ensures it stretches to fill available space */
 }
 
 .menu-item {
@@ -238,9 +239,7 @@ button.ui.button {
 
 .dropdown-menu .dropdown-item:hover {
   background: #f0f0f0;
-}
-
-.dropdown-menu .dropdown-divider {
+}.dropdown-menu .dropdown-divider {
   height: 1px;
   background: #ddd;
   margin: 8px 0;

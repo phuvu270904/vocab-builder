@@ -1,64 +1,45 @@
 <template>
-  <div class="card">
-    <div class="left-container">
-      <i class="user circle outline icon"></i>
-      <h2 class="gradienttext">{{ user.username }}</h2>
+  <div class="profile-page">
+    <!-- User Info Section -->
+    <div class="profile-header">
+      <i class="user circle icon"></i>
+      <h2 class="username">{{ user.username }}</h2>
     </div>
-    <div class="right-container">
-      <h1 class="gradienttext" style="margin-top: 30px; margin-bottom: 10px;">Profile Details</h1>
-      <div style="display: flex">
-        <table style="flex: 1">
-          <tr>
-            <td>Name :</td>
-            <td>
-              <div class="ui inverted input">
-                <input v-model="form.username" type="text" placeholder="Name...">
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>Mobile :</td>
-            <td>
-              <div class="ui inverted input">
-                <input v-model="form.phone" type="text" placeholder="Mobile...">
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>Email :</td>
-            <td>
-              <div class="ui inverted input">
-                <input v-model="form.email" type="text" placeholder="Email...">
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td></td>
-            <td>
-            <button class="ui inverted grey button" style="font-size: 20px;" :disabled="disableUpdate" @click="handleUpdateProfile()">Update Profile</button>
-            </td>
-          </tr>
-        </table>
 
-        <div style="flex: 1; display: flex; align-items: center; justify-content: center; margin-bottom: 100px;">
-          <router-link to="/changePassword">
-            <div class="ui animated button black" tabindex="0" style="font-size: 30px;">
-              <div class="visible content">Change password?</div>
-              <div class="hidden content">
-                <i class="right arrow icon"></i>
-              </div>
-            </div>
-          </router-link>
+    <!-- Profile Form Section -->
+    <div class="profile-form-container">
+      <h3 class="section-title">Profile Details</h3>
+      <form class="profile-form">
+        <div class="form-group">
+          <label for="username">Name:</label>
+          <input v-model="form.username" id="username" type="text" placeholder="Enter your name" />
         </div>
-      </div>
-      
+
+        <div class="form-group">
+          <label for="phone">Mobile:</label>
+          <input v-model="form.phone" id="phone" type="text" placeholder="Enter your mobile number" />
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input v-model="form.email" id="email" type="email" placeholder="Enter your email" />
+        </div>
+
+        <div class="form-actions">
+          <button class="ui button primary update-btn" :disabled="disableUpdate" @click.prevent="handleUpdateProfile">
+            Update Profile
+          </button>
+          <router-link to="/changePassword" class="ui button secondary change-password-btn">Change
+            Password</router-link>
+        </div>
+      </form>
     </div>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
-import {api} from '../helpers/helpers.js';
+import { api } from '../helpers/helpers.js';
 
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
@@ -125,152 +106,120 @@ export default {
 </script>
 
 <style scoped>
-body {
-  font-family: Arial, sans-serif;
-  padding: 20px;
-  background: #180835;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+/* General Layout */
+.profile-page {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  font-family: "Arial", sans-serif;
 }
 
-html,
-body {
-  height: 100%;
-}
-
-.card {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  border-radius: 30px;
-  padding: 10px;
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-  width: 100%;
-  height: 800px;
-}
-
-.left-container {
-  background: #000000;
-  background: -webkit-linear-gradient(to right, #434343, #000000);
-  background: linear-gradient(to right, #434343, #000000);
-  flex: 1;
-  max-width: 30%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  height: 500px;
-  padding: 10px;
-  margin: 30px;
-  border-radius: 20px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-
-.right-container {
-  background: #000000;
-  background: -webkit-linear-gradient(to left, #434343, #000000);
-  background: linear-gradient(to left, #434343, #000000);
-  flex: 1;
-  max-width: 70%;
-  height: 500px;
-  padding: 10px;
-  margin: 20px;
-  border-radius: 30px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-
-@media only screen and (max-width: 860px) {
-  .card {
-    flex-direction: column;
-    margin: 10px;
-    height: auto;
-    width: 90%;
-  }
-
-  .left-container {
-    flex: 1;
-    max-width: 100%;
-  }
-}
-
-@media only screen and (max-width: 600px) {
-  .card {
-    flex-direction: column;
-    margin: 10px;
-  }
-
-  .left-container {
-    flex: 1;
-    max-width: 100%;
-  }
-}
-
-img {
-  width: 200px;
-  height: 200px;
-  max-width: 200px;
-  border-radius: 50%;
-  margin: 10px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-
-h1 {
+/* Profile Header */
+.profile-header {
   text-align: center;
-  font-size: 50px;
-  margin-bottom: 5px;
+  margin-bottom: 2rem;
 }
 
-.gradienttext {
-  color: white
+.user.icon {
+  font-size: 100px
 }
 
-p {
-  font-size: 18px;
-  margin-bottom: 20px;
-  color: aliceblue
-}
-
-table {
-  width: 100%;
-  height: 280px;
-}
-
-td {
-
-  padding: 10px;
-  border: none;
-  border-radius: 20px;
-  color: white;
-}
-
-td:first-child {
+.username {
+  font-size: 1.5rem;
   font-weight: bold;
-  text-align: end;
+  color: #333333;
 }
 
-.credit a {
-  text-decoration: none;
-  color: #fff;
-  font-weight: 800;
-}
-
-.credit {
-  color: #fff;
+/* Section Title */
+.section-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #555555;
+  margin-bottom: 1rem;
   text-align: center;
-  margin-top: 10px;
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-.left-container i {
-  font-size: 150px;
-  color: white;
-  margin-top: 150px;
-  margin-bottom: -65px;
+/* Form Styles */
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-.right-container table {
-  font-size: 25px;
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: #666666;
+}
+
+input {
+  padding: 0.75rem;
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  color: #333333;
+}
+
+input:focus {
+  outline: none;
+  border-color: #6c63ff;
+  box-shadow: 0 0 4px rgba(108, 99, 255, 0.4);
+}
+
+/* Actions */
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.btn {
+  flex: 1;
+  padding: 0.75rem;
+  font-size: 1rem;
+  text-align: center;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.update-btn {
+  background: #6c63ff;
+  color: #ffffff;
+}
+
+.update-btn:hover {
+  background: #594fbc;
+  transform: translateY(-2px);
+}
+
+.change-password-btn {
+  background: #f0f0f0;
+  color: #6c63ff;
+  text-align: center;
+}
+
+.change-password-btn:hover {
+  background: #e5e5e5;
+  color: #594fbc;
+  transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .form-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
 }
 </style>

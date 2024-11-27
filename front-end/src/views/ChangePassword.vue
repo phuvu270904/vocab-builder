@@ -1,44 +1,36 @@
 <template>
-    <div class="card">
-        <div class="right-container">
-            <h1 class="gradienttext" style="margin-top: 30px; margin-bottom: 10px;">Change Password</h1>
-            <div style="display: flex">
-                <table style="flex: 1">
-                    <tr>
-                        <td>Old Password :</td>
-                        <td>
-                            <div class="ui inverted input">
-                                <input v-model="form.oldPassword" id="oldPassword" name="oldPassword" type="password" placeholder="Old Password..." autocomplete="new-password">
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>New Password :</td>
-                        <td>
-                            <div class="ui inverted input">
-                                <input v-model="form.newPassword" id="newPassword" name="newPassword" type="password" placeholder="New Password..." autocomplete="new-password">
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Confirm new password :</td>
-                        <td>
-                            <div class="ui inverted input">
-                                <input v-model="form.confirmNewPassword" id="confirmNewPassword" name="confirmNewPassword" type="password" placeholder="Confirm new password..." autocomplete="new-password">
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td>
-                            <button class="ui inverted grey button" style="font-size: 20px;" :disabled="disableChangePassword"
-                                @click="handleResetPassword()">Change password</button>
-                        </td>
-                    </tr>
-                </table>
+    <div class="change-password-page">
+        <!-- Title Section -->
+        <div class="header">
+            <h2>Change Password</h2>
+        </div>
+
+        <!-- Form Section -->
+        <form class="password-form" @submit.prevent="handleResetPassword">
+            <div class="form-group">
+                <label for="oldPassword">Old Password:</label>
+                <input v-model="form.oldPassword" id="oldPassword" type="password" placeholder="Enter old password"
+                    autocomplete="current-password" />
             </div>
 
-        </div>
+            <div class="form-group">
+                <label for="newPassword">New Password:</label>
+                <input v-model="form.newPassword" id="newPassword" type="password" placeholder="Enter new password"
+                    autocomplete="new-password" />
+            </div>
+
+            <div class="form-group">
+                <label for="confirmNewPassword">Confirm New Password:</label>
+                <input v-model="form.confirmNewPassword" id="confirmNewPassword" type="password"
+                    placeholder="Confirm new password" autocomplete="new-password" />
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="ui button primary submit-btn" :disabled="disableChangePassword">
+                    Change Password
+                </button>
+            </div>
+        </form>
     </div>
 </template>
 
@@ -84,152 +76,78 @@ export default {
 </script>
 
 <style scoped>
-body {
-    font-family: Arial, sans-serif;
-    padding: 20px;
-    background: #180835;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+/* General Layout */
+.change-password-page {
+    max-width: 500px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    font-family: "Arial", sans-serif;
 }
 
-html,
-body {
-    height: 100%;
-}
-
-.card {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    border-radius: 30px;
-    padding: 10px;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-    width: 100%;
-    height: 800px;
-}
-
-.left-container {
-    background: #000000;
-    background: -webkit-linear-gradient(to right, #434343, #000000);
-    background: linear-gradient(to right, #434343, #000000);
-    flex: 1;
-    max-width: 30%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 500px;
-    padding: 10px;
-    margin: 30px;
-    border-radius: 20px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-
-.right-container {
-    background: #000000;
-    background: -webkit-linear-gradient(to left, #434343, #000000);
-    background: linear-gradient(to left, #434343, #000000);
-    flex: 1;
-    max-width: 70%;
-    height: 500px;
-    padding: 10px;
-    margin: 20px;
-    border-radius: 30px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-
-@media only screen and (max-width: 860px) {
-    .card {
-        flex-direction: column;
-        margin: 10px;
-        height: auto;
-        width: 90%;
-    }
-
-    .left-container {
-        flex: 1;
-        max-width: 100%;
-    }
-}
-
-@media only screen and (max-width: 600px) {
-    .card {
-        flex-direction: column;
-        margin: 10px;
-    }
-
-    .left-container {
-        flex: 1;
-        max-width: 100%;
-    }
-}
-
-img {
-    width: 200px;
-    height: 200px;
-    max-width: 200px;
-    border-radius: 50%;
-    margin: 10px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-
-h1 {
+/* Header */
+.header {
     text-align: center;
-    font-size: 50px;
-    margin-bottom: 5px;
+    margin-bottom: 2rem;
 }
 
-.gradienttext {
-    color: white
-}
-
-p {
-    font-size: 18px;
-    margin-bottom: 20px;
-    color: aliceblue
-}
-
-table {
-    width: 100%;
-    height: 280px;
-}
-
-td {
-
-    padding: 10px;
-    border: none;
-    border-radius: 20px;
-    color: white;
-}
-
-td:first-child {
+.header h2 {
+    font-size: 1.5rem;
     font-weight: bold;
-    text-align: end;
+    color: #333333;
 }
 
-.credit a {
-    text-decoration: none;
-    color: #fff;
-    font-weight: 800;
+/* Form Styles */
+.password-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
-.credit {
-    color: #fff;
-    text-align: center;
-    margin-top: 10px;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
+.form-group {
+    display: flex;
+    flex-direction: column;
 }
 
-.left-container i {
-    font-size: 150px;
-    color: white;
-    margin-top: 150px;
-    margin-bottom: -65px;
+label {
+    font-size: 0.9rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: #666666;
 }
 
-.right-container table {
-    font-size: 25px;
+input {
+  padding: 0.75rem;
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  color: #333333;
+}
+
+input:focus {
+  outline: none;
+  border-color: #6c63ff;
+  box-shadow: 0 0 4px rgba(108, 99, 255, 0.4);
+}
+
+/* Actions */
+.form-actions {
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+
+.submit-btn:hover {
+  background: #594fbc;
+  transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .password-form {
+    gap: 0.5rem;
+  }
 }
 </style>
