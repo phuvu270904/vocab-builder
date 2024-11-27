@@ -1,36 +1,36 @@
 <template>
   <div id="app">
-    <div v-if="showNav" class="ui inverted segment navbar">
-      <div class="ui center aligned container">
-        <div class="ui massive secondary inverted pointing menu compact">
-          <router-link to="/words" exact class="item">
+    <div v-if="showNav" class="navbar">
+      <div class="navbar-container">
+        <div class="menu">
+          <router-link to="/words" exact class="menu-item">
             <i class="comment outline icon"></i> Words
           </router-link>
-          <router-link v-if="isLoggedIn && $store.state.isAdmin" to="/words/new" class="item">
+          <router-link v-if="isLoggedIn && $store.state.isAdmin" to="/words/new" class="menu-item">
             <i class="plus circle icon"></i> New
           </router-link>
-          <router-link v-if="isLoggedIn" to="/test" class="item">
+          <router-link v-if="isLoggedIn" to="/test" class="menu-item">
             <i class="graduation cap icon"></i> Test
           </router-link>
         </div>
-        <div class="ui large secondary inverted pointing menu compact ui right floated">
-          <router-link v-if="!isLoggedIn" to="/login" class="ui simple dropdown item ui massive menu">
+        <div class="user-menu">
+          <router-link v-if="!isLoggedIn" to="/login" class="menu-item">
             <i class="sign in icon"></i> Login
           </router-link>
-          <div v-else class="ui simple dropdown item ui massive menu">
-            <i class="user icon"></i>
-            <div class="ui massive">
-              {{ user.username }}
-            </div>
-            <i class="dropdown icon"></i>
-            <div class="menu">
-              <router-link to="/profile" class="item">
+          <div v-else class="dropdown">
+            <button class="dropdown-toggle">
+              <i class="user icon"></i>
+              <span>{{ user.username }}</span>
+              <i class="caret-down icon"></i>
+            </button>
+            <div class="dropdown-menu">
+              <router-link to="/profile" class="dropdown-item">
                 <i class="user icon"></i> Profile
               </router-link>
-              <div class="divider"></div>
-              <div class="item" @click="handleLogout()">
+              <div class="dropdown-divider"></div>
+              <button class="dropdown-item" @click="handleLogout">
                 <i class="sign out icon"></i> Logout
-              </div>
+              </button>
             </div>
           </div>
         </div>
@@ -50,7 +50,7 @@
 
 <script>
 import { mapGetters, mapMutations } from 'vuex';
-import {api} from './helpers/helpers';
+import { api } from './helpers/helpers';
 
 export default {
   name: 'app',
@@ -65,9 +65,9 @@ export default {
       this.setLoginStatus(true);
       const userInfo = await api.profile();
       if (userInfo.user.role === 'admin') {
-          this.$store.commit('setAdmin', true);
+        this.$store.commit('setAdmin', true);
       } else {
-          this.$store.commit('setAdmin', false);
+        this.$store.commit('setAdmin', false);
       }
       this.setUser({
         email: userInfo.user.email,
@@ -113,7 +113,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 #app>div.navbar {
   margin-bottom: 1.5em;
 }
@@ -146,4 +146,108 @@ button.ui.button {
 .ui.simple.dropdown .menu {
   margin-top: 0 !important;
 }
+
+/* Global Styles */
+.navbar {
+  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+  padding: 15px 20px;
+  color: white;
+  font-family: 'Poppins', sans-serif;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Menu Styles */
+.menu {
+  display: flex;
+  justify-content: center; /* Center the menu horizontally */
+  align-items: center; /* Center items vertically */
+  gap: 20px; /* Space between menu items */
+  flex-grow: 1; /* Ensures it stretches to fill available space */
+}
+
+.menu-item {
+  text-decoration: none;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: color 0.3s ease;
+}
+
+.menu-item:hover {
+  color: #ffdd57;
+}
+
+/* User Menu Styles */
+.user-menu {
+  display: flex;
+  align-items: center;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-toggle {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  color: #333;
+  border-radius: 8px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  display: none;
+  flex-direction: column;
+  min-width: 150px;
+}
+
+.dropdown-menu .dropdown-item {
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  text-decoration: none;
+  color: #333;
+  font-size: 0.9rem;
+  border-radius: 5px;
+  transition: background 0.3s ease;
+  cursor: pointer;
+}
+
+.dropdown-menu .dropdown-item:hover {
+  background: #f0f0f0;
+}
+
+.dropdown-menu .dropdown-divider {
+  height: 1px;
+  background: #ddd;
+  margin: 8px 0;
+}
+
+.dropdown:hover .dropdown-menu {
+  display: flex;
+}
+
 </style>

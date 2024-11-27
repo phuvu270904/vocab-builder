@@ -23,9 +23,10 @@
             </div>
             <input type="text" placeholder="Enter word..." v-model="word.french" />
         </div>
-
-        <button class="primary ui button" :disabled="disabledTranslate" @click.prevent="handleTranslate">{{ loading ? "Translating..." : "Auto Translate"}}</button>
-        <button class="positive ui button" :disabled="disabled" @click.prevent="onSubmit">Submit</button>
+        <div style="display: flex; flex-direction: column; width: 20%; height: 90px; justify-content: space-around;">
+            <button class="primary ui button" :disabled="disabledTranslate" @click.prevent="handleTranslate">{{ loading ? "Translating..." : "Auto Translate"}}</button>
+            <button class="positive ui button" :disabled="disabled" @click.prevent="onSubmit">Submit</button>
+        </div>
     </form>
 </template>
 
@@ -92,5 +93,8 @@ export default {
 <style scoped>
 .error {
     color: red;
+}
+.ui.label {
+    width: 150px;
 }
 </style>

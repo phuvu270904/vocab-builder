@@ -167,4 +167,7 @@ export default {
   color: #3c763d;
   background-color: #dff0d8;
 }
+.ui.label {
+  width: 150px;
+}
 </style>

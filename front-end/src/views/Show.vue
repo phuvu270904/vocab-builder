@@ -75,4 +75,7 @@ export default {
     margin-top: 10px; 
     cursor: pointer;
 }
+.ui.label {
+    width: 150px;
+}
 </style>
