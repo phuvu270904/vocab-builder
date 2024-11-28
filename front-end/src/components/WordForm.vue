@@ -64,15 +64,27 @@ export default {
     data() {
         return {
             errorsPresent: false,
-            loading: false
+            loading: false,
+            initialWord: null
         };
+    },
+    watch: {
+        word: {
+            immediate: true,
+            handler(newWord) {
+                this.initialWord = JSON.parse(JSON.stringify(newWord));
+            }
+        }
     },
     computed: {
         disabled() {
-            return this.word.english === '' || this.word.german === '' || this.word.french === '';
+            const hasEmptyField = this.word.english.trim() === '' || this.word.german.trim() === '' || this.word.french.trim() === '';
+            const isUnchanged = JSON.stringify(this.word) === JSON.stringify(this.initialWord);
+
+            return hasEmptyField || isUnchanged;
         },
         disabledTranslate() {
-            return this.word.english === '';
+            return this.word.english.trim() === '';
         }
     },
     methods: {
