@@ -78,13 +78,15 @@ export default {
     },
     computed: {
         disabled() {
-            const hasEmptyField = this.word.english.trim() === '' || this.word.german.trim() === '' || this.word.french.trim() === '';
+            const hasEmptyField = this.word.english?.trim() === '' || this.word.german?.trim() === '' || this.word.french?.trim() === '';
             const isUnchanged = JSON.stringify(this.word) === JSON.stringify(this.initialWord);
 
             return hasEmptyField || isUnchanged;
         },
         disabledTranslate() {
-            return this.word.english.trim() === '';
+            const hasEmptyField = this.word.english?.trim() === '';
+            const isUnchanged = JSON.stringify(this.word) === JSON.stringify(this.initialWord);
+            return hasEmptyField || isUnchanged;
         }
     },
     methods: {
