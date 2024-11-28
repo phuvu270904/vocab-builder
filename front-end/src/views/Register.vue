@@ -1,6 +1,9 @@
 <template>
   <div class="register-page">
     <div class="register-card">
+      <div>
+        <img src="../assets/futionary-logo.png" alt="logo" style="width: 40%; margin: 10px"/>
+      </div>
       <div class="register-header">
         <h1>Sign Up</h1>
         <p>Create your account</p>

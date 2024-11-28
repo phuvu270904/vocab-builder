@@ -2,6 +2,10 @@
   <div id="app">
     <div v-if="showNav" class="navbar">
       <div class="navbar-container">
+        <router-link to="/words" class="logo">
+          <img src="./assets/futionary-white-logo.png" alt="logo" />
+        </router-link>
+
         <div class="menu">
           <router-link to="/words" exact class="menu-item">
             <i class="comment outline icon"></i> Words
@@ -40,9 +44,7 @@
     <div class='ui text container'>
       <flash-message class="myFlash"></flash-message>
       <div>
-        <div>
-          <router-view />
-        </div>
+        <router-view />
       </div>
     </div>
   </div>
@@ -153,43 +155,45 @@ button.ui.button {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
+/* Navbar Container */
 .navbar-container {
+  max-width: 1200px;
+  margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
+  gap: 20px;
 }
 
-/* Menu Styles */
+/* Logo Section */
+.logo img {
+  max-width: 150px;
+  height: auto;
+}
+
+/* Menu */
 .menu {
   display: flex;
-  justify-content: center;
-  /* Center the menu horizontally */
-  align-items: center;
-  /* Center items vertically */
-  gap: 20px;
-  /* Space between menu items */
-  flex-grow: 1;
-  /* Ensures it stretches to fill available space */
+  gap: 15px;
+  margin-right: 80px;
 }
 
 .menu-item {
-  text-decoration: none;
   color: white;
   font-size: 1rem;
   font-weight: 600;
+  text-decoration: none;
+  transition: color 0.3s ease;
   display: flex;
   align-items: center;
   gap: 5px;
-  transition: color 0.3s ease;
 }
 
 .menu-item:hover {
   color: #ffdd57;
 }
 
-/* User Menu Styles */
+/* User Menu */
 .user-menu {
   display: flex;
   align-items: center;
@@ -249,4 +253,24 @@ button.ui.button {
   display: flex;
 }
 
+/* Responsive Design */
+@media (max-width: 768px) {
+  .navbar-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .menu {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .menu-item {
+    font-size: 0.9rem;
+  }
+
+  .logo img {
+    max-width: 100px;
+  }
+}
 </style>

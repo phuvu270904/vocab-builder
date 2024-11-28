@@ -1,6 +1,9 @@
 <template>
     <div class="login-page">
       <div class="login-card">
+        <div>
+          <img src="../assets/futionary-logo.png" alt="logo" style="width: 40%; margin: 10px"/>
+        </div>
         <div class="login-header">
           <h1>Welcome Back</h1>
           <p>Please log in to continue</p>
