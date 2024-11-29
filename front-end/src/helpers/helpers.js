@@ -20,19 +20,11 @@ const handleError = fn => (...params) =>
 
 export const api = {
     getWord: handleError(async id => {
-        const res = await axios.get(`${baseURL}/words/` + id, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`
-            }
-        });
+        const res = await axios.get(`${baseURL}/words/` + id);
         return res.data;
     }),
     getWords: handleError(async () => {
-        const res = await axios.get(`${baseURL}/words`, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`
-            }
-        });
+        const res = await axios.get(`${baseURL}/words`);
         return res.data;
     }),
     deleteWord: handleError(async id => {
