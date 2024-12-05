@@ -50,12 +50,15 @@ export const delete_a_word = async (req, res) => {
 export const translate_word = async (req, res) => {
     try {
         const word = req.body.word;
-        const translateToFrench = await axios.get(`https://api.mymemory.translated.net/get?q=${word}&langpair=en|fr`);
-        const translateToGerman = await axios.get(`https://api.mymemory.translated.net/get?q=${word}&langpair=en|de`);
+        const source = req.body.source;
+        const target = req.body.target;
+        const translate = await axios.get(
+					`https://api.mymemory.translated.net/get?q=${word}&langpair=${source}|${target}`
+				)
+        
         const result = {
-            french: translateToFrench.data.matches[0].translation,
-            german: translateToGerman.data.matches[0].translation
-        }
+					data: translate.data.matches[0].translation,
+				}
         res.status(200).json(result);
     } catch (err) {
         res.status(500).send(err.message);

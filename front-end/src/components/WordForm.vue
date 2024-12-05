@@ -84,7 +84,7 @@ export default {
             return hasEmptyField || isUnchanged;
         },
         disabledTranslate() {
-            const hasEmptyField = this.word.english?.trim() === '';
+            const hasEmptyField = this.word.english?.trim() === '' && this.word.german?.trim() === '' && this.word.french?.trim() === '';
             const isUnchanged = JSON.stringify(this.word) === JSON.stringify(this.initialWord);
             return hasEmptyField || isUnchanged;
         }
@@ -100,11 +100,29 @@ export default {
         handleTranslate: async function () {
             try {
                 this.loading = true;
-                const response = await api.translateWord({ word: this.word.english });
-                // eslint-disable-next-line vue/no-mutating-props
-                this.word.german = response.german;
-                // eslint-disable-next-line vue/no-mutating-props
-                this.word.french = response.french;
+                if (this.word.english) {
+                    const responseGerman = await api.translateWord({ word: this.word.english, source: 'en', target: 'de' });
+                    const responseFrench = await api.translateWord({ word: this.word.english, source: 'en', target: 'fr' });
+                    // eslint-disable-next-line vue/no-mutating-props
+                    this.word.german = responseGerman.data;
+                    // eslint-disable-next-line vue/no-mutating-props
+                    this.word.french = responseFrench.data;
+                } else if (this.word.german) {
+                    const responseEnglish = await api.translateWord({ word: this.word.german, source: 'de', target: 'en' });
+                    const responseFrench = await api.translateWord({ word: this.word.german, source: 'de', target: 'fr' });
+                    // eslint-disable-next-line vue/no-mutating-props
+                    this.word.english = responseEnglish.data;
+                    // eslint-disable-next-line vue/no-mutating-props
+                    this.word.french = responseFrench.data;
+                } else if (this.word.french) {
+                    const responseEnglish = await api.translateWord({ word: this.word.french, source: 'fr', target: 'en' });
+                    const responseGerman = await api.translateWord({ word: this.word.french, source: 'fr', target: 'de' });
+                    // eslint-disable-next-line vue/no-mutating-props
+                    this.word.english = responseEnglish.data;
+                    // eslint-disable-next-line vue/no-mutating-props
+                    this.word.german = responseGerman.data;
+                }
+                
             } catch (error) {
                 console.error(error);
             } finally {
